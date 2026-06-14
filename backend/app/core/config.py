@@ -1,9 +1,15 @@
 import os
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AI2School API"
     API_V1_STR: str = "/api/v1"
+    
+    # AI Config
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
     # Database
     POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")

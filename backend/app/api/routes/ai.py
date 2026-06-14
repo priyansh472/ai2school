@@ -7,6 +7,7 @@ from google.genai import types
 
 from app.api import deps
 from app.models.core import User
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -26,7 +27,7 @@ async def generate_lesson_plan(
 ) -> Any:
     """Generate an AI-powered lesson plan."""
     
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = settings.GEMINI_API_KEY
     if not api_key:
         raise HTTPException(status_code=500, detail="Gemini API Key not configured")
         
@@ -51,7 +52,7 @@ async def generate_lesson_plan(
     
     try:
         response = client.models.generate_content(
-            model='gemini-3.0-flash',
+            model='gemini-2.5-flash',
             contents=prompt,
         )
         return {"lesson_plan": response.text}
@@ -72,7 +73,7 @@ async def generate_notification(
     current_user: User = Depends(deps.get_current_active_user),
 ) -> Any:
     """Generate an AI-powered parent communication message."""
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = settings.GEMINI_API_KEY
     if not api_key:
         raise HTTPException(status_code=500, detail="Gemini API Key not configured")
         
@@ -89,7 +90,7 @@ async def generate_notification(
     
     try:
         response = client.models.generate_content(
-            model='gemini-3.0-flash',
+            model='gemini-2.5-flash',
             contents=prompt,
         )
         return {"message": response.text}

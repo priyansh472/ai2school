@@ -34,7 +34,13 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
     throw new Error('Unauthorized');
   }
 
-  const data = await response.json();
+  let data;
+  try {
+    const text = await response.text();
+    data = text ? JSON.parse(text) : {};
+  } catch (e) {
+    data = { detail: `Server error (${response.status})` };
+  }
 
   if (!response.ok) {
     throw new Error(data.detail || data.message || 'API Error');
